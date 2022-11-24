@@ -29,6 +29,12 @@ import RxSwift
  */
 /*
  서브젝트로 completed이벤트 전달 시점에  마지막으로 전달된 next 이벤트 구독자에게 전달
+ 
+ completed 이벤트가 전달될까지 어떤 이벤트도 전달하지 않는다.
+ 
+ 에러의 경우엔  next 이벤트가 전달되지 않고
+ 에러이벤트만 전달하고 종료댐
+ 
  */
 let bag = DisposeBag()
 
@@ -36,7 +42,18 @@ enum MyError: Error {
    case error
 }
 
+let test = AsyncSubject<Int>()
 
+test
+    .subscribe{print($0)}
+    .disposed(by: bag)
+
+test.onNext(1)
+test.onNext(2)
+test.onNext(3)
+test.onNext(4)
+
+test.onCompleted()
 
 
 

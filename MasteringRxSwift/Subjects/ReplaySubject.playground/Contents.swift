@@ -28,7 +28,14 @@ import RxSwift
  # ReplaySubject
  */
 /*
+ 두개 이상의 이벤트를 새로운 구독자에게 전달하고 싶다면 이걸 사용
  하나이상의 최신 이벤트를 버퍼에 전달하고 구독자가 생기면 와르르 전달
+ 
+ on complete, error 둘다 기존의 버퍼 크기만큼의 이벤트를 전달하고 실행함.
+ 앞의 두개와는 다른측면이 잇음
+ 
+ 버퍼의 크기만큼 저장한다. 메모리에 저장되기때무네 너무 큰 버퍼를 사용하는 것은 안된다.
+ 
  */
 let disposeBag = DisposeBag()
 
@@ -36,8 +43,15 @@ enum MyError: Error {
    case error
 }
 
+let rs = ReplaySubject<Int>.create(bufferSize: 3)
+
+(1...10).forEach{rs.onNext($0)}
+
+rs.subscribe {
+    print("ob1",$0)
+}.disposed(by: disposeBag)
 
 
-
+rs.onNext(11)
 
 

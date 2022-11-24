@@ -28,12 +28,36 @@ import RxCocoa
 /*:
  # Relay
  */
+/*
+ 릴레이는 세가지가 있고 publish, behavior, replay
+ 서브젝트와 유사하고 내부에 서브젝트를 래핑하고있다.
+ 서브젝트와 유사 그러나 next이벤트만 전달하는 차이가 있다
+ 서브젝트와그래서 종료되지 않는다.
+ 구독자가 dispose되기 전까지 계속 일함
+ ui event를 전달할때 씀
+ */
 
 let bag = DisposeBag()
 
+let prelay = PublishRelay<Int>()
 
+prelay
+    .subscribe{print("1",$0)}
+    .disposed(by: bag)
 
+// onnext가 릴레이에서는 accept이다
+prelay.accept(1)
 
+let brelay = BehaviorRelay(value: 3)
+
+brelay
+    .subscribe{print("2",$0)}
+    .disposed(by: bag)
+
+brelay.accept(3)
+
+// brelay가 가지고 있는 기능. 최근의 이벤트를 저장하고 보여줌
+brelay.value
 
 
 
